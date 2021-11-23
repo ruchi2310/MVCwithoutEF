@@ -55,7 +55,7 @@ namespace MVCwithoutEF.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddorEdit(int id, [Bind("Bookid,Title,Author,Price")] BookViewModel bookViewModel)
+        public IActionResult AddorEdit(int id, [Bind("Bookid,VIEWe,Author,Price")] BookViewModel bookViewModel)
         {
 
             if (ModelState.IsValid)
