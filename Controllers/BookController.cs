@@ -32,7 +32,7 @@ namespace MVCwithoutEF.Controllers
             using (SqlConnection sqlConnection = new SqlConnection(conStr))
             {
                 sqlConnection.Open();
-                SqlDataAdapter sqlDa = new SqlDataAdapter("BooVIewrEditAll", sqlConnection);
+                SqlDataAdapter sqlDa = new SqlDataAdapter("Book", sqlConnection);
                 sqlDa.SelectCommand.CommandType = System.Data.CommandType.StoredProcedure;
 
 
