@@ -10,100 +10,67 @@ using Microsoft.EntityFrameworkCore;
 using MVCwithoutEF.Data;
 using MVCwithoutEF.Models;
 using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace MVCwithoutEF.Controllers
 {
     public class BookController : Controller
 
-    { static string conStr =  "Server=(local)\\sqlexpress;Database=BookDB;Trusted_Connection=True;MultipleActiveResultSets=true";
+    { 
+        private readonly string _connectionString;
 
-        /* private IConfiguartion _configuration;
+         private readonly IConfiguration _configuration;
 
-        public BookController(IConfiguartion configuartion)
+        public BookController(IConfiguration configuartion)
         {
-           this._configuration = configuartion;
+             _configuration = configuartion;
+            _connectionString = _configuration.GetConnectionString("DevConnection");
         }
-*/
-        // GET: Book
+
+
         public IActionResult Index()
         {
-
-            DataTable dtbl = new DataTable();
-            using (SqlConnection sqlConnection = new SqlConnection(conStr))
-            {
-                sqlConnection.Open();
-                SqlDataAdapter sqlDa = new SqlDataAdapter("Book", sqlConnection);
-                sqlDa.SelectCommand.CommandType = System.Data.CommandType.StoredProcedure;
-
-
-            }
-            return View();
+            var dataAccess = new DataAccess(_connectionString);
+            var bookList = dataAccess.GetBooks();
+            return View(bookList);
         }
 
-        // GET: Book/Details/5
-
-        // GET: Book/AddorEdit/5
         public IActionResult AddorEdit(int? id)
         {
 
-            BookViewModel bookViewModel = new BookViewModel();
+            var bookViewModel = new Book();
             return View(bookViewModel);
         }
 
-        // POST: Book/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddorEdit(int id, [Bind("Bookid,VIEWe,Author,Price")] BookViewModel bookViewModel)
+        public IActionResult AddorEdit(int id, [Bind("Bookid,VIEWe,Author,Price")] Book book)
         {
 
             if (ModelState.IsValid)
             {
-                using (SqlConnection sqlConnection = new SqlConnection(conStr))
-                {
-
-
-                    sqlConnection.Open();
-                    SqlCommand sqlCmd = new SqlCommand("BookAddorEdit", sqlConnection);
-                    sqlCmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    sqlCmd.Parameters.AddWithValue("Bookid", bookViewModel.Bookid);
-                    sqlCmd.Parameters.AddWithValue("Title", bookViewModel.Title);
-                    sqlCmd.Parameters.AddWithValue("Author", bookViewModel.Author);
-                    sqlCmd.Parameters.AddWithValue("Price", bookViewModel.Price);
-                    sqlCmd.ExecuteNonQuery();
-
-
-                }
+                var dataAccess = new DataAccess(_connectionString);
+                dataAccess.AddOrEditBook(book);
                 return RedirectToAction(nameof(Index));
             }
-            return View(bookViewModel);
+            return View(book);
         }
 
-        // GET: Book/Delete/5
         public IActionResult Delete(int? id)
         {
-
-
-
-
             return View();
         }
 
-        // POST: Book/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-
+            // Implement delete functionality here
             return RedirectToAction(nameof(Index));
         }
 
     }
 
-    public interface IConfiguartion
-    {
-        string GetConnectionString(string v);
-    }
 }
 

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MVCwithoutEF.Models
 {
-    public class BookViewModel
+    public class Book
     {      
         
         [Key]
