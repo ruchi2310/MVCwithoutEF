@@ -24,7 +24,7 @@ namespace MVCwithoutEF.Data
             using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
 
-                var sqlCommand = new SqlCommand("Book", sqlConnection);
+                var sqlCommand = new SqlCommand("BookViewAll", sqlConnection);
                 sqlConnection.Open();
                 SqlDataReader rdr = sqlCommand.ExecuteReader();
                 while (rdr.Read())
@@ -32,7 +32,7 @@ namespace MVCwithoutEF.Data
                     var book = new Book();
                     book.Bookid = rdr.GetInt32("Bookid");
                     book.Title = rdr.GetString("Title");
-                    book.Author = rdr.GetInt32("Author");
+                    book.Author = rdr.GetString("Author");
                     book.Price = rdr.GetInt32("Price");
                     bookList.Add(book);
                 }
@@ -52,6 +52,23 @@ namespace MVCwithoutEF.Data
                 sqlCmd.Parameters.AddWithValue("Title", book.Title);
                 sqlCmd.Parameters.AddWithValue("Author", book.Author);
                 sqlCmd.Parameters.AddWithValue("Price", book.Price);
+                sqlCmd.ExecuteNonQuery();
+            }
+            
+          
+
+
+            
+
+        }
+        public void DeleteByid(int id)
+        {
+            using(SqlConnection sqlConnection=new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlCmd = new SqlCommand("BookDeleteByid", sqlConnection);
+                sqlCmd.CommandType = CommandType.StoredProcedure;
+                sqlCmd.Parameters.AddWithValue("Bookid", id);
                 sqlCmd.ExecuteNonQuery();
             }
         }

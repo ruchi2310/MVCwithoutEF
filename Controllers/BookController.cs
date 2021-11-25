@@ -39,13 +39,16 @@ namespace MVCwithoutEF.Controllers
         {
 
             var bookViewModel = new Book();
-            return View(bookViewModel);
+          
+            
+                return View(bookViewModel);
+            
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddorEdit(int id, [Bind("Bookid,VIEWe,Author,Price")] Book book)
+        public IActionResult AddorEdit(int id, [Bind("Bookid,VIEW,Author,Price")] Book book)
         {
 
             if (ModelState.IsValid)
@@ -54,12 +57,16 @@ namespace MVCwithoutEF.Controllers
                 dataAccess.AddOrEditBook(book);
                 return RedirectToAction(nameof(Index));
             }
-            return View(book);
+            return RedirectToAction("Index");
         }
 
         public IActionResult Delete(int? id)
         {
-            return View();
+
+
+
+            var bookViewModel = new Book();
+            return View(bookViewModel);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -67,9 +74,11 @@ namespace MVCwithoutEF.Controllers
         public IActionResult DeleteConfirmed(int id)
         {
             // Implement delete functionality here
+            var dataAccess = new DataAccess(_connectionString);
+            dataAccess.DeleteByid(id);
             return RedirectToAction(nameof(Index));
         }
-
+       
     }
 
 }
