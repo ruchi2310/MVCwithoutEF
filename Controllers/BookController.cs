@@ -48,7 +48,7 @@ namespace MVCwithoutEF.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddorEdit(int id, [Bind("Bookid,VIEW,Author,Price")] Book book)
+        public IActionResult AddorEdit(int id, [Bind("Bookid,Title,Author,Price")] Book book)
         {
 
             if (ModelState.IsValid)
@@ -57,7 +57,7 @@ namespace MVCwithoutEF.Controllers
                 dataAccess.AddOrEditBook(book);
                 return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction("Index");
+            return View();
         }
 
         public IActionResult Delete(int? id)
@@ -65,7 +65,7 @@ namespace MVCwithoutEF.Controllers
 
 
 
-            var bookViewModel = new Book();
+           var bookViewModel = new Book();
             return View(bookViewModel);
         }
 
